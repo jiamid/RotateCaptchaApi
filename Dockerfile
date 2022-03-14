@@ -3,8 +3,8 @@ ENV PYTHONUNBUFFERED 1
 # RUN apt-get update
 # RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
 # RUN apt-get install -y nodejs
-RUN apt update
-RUN apt install libgl1-mesa-glx
+RUN apt-get update
+RUN apt-get install -y libgl1-mesa-glx
 RUN mkdir /code
 WORKDIR /code
 COPY requirements.txt /code/
