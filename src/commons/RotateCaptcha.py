@@ -22,7 +22,7 @@ class RotateCaptcha():
     def __init__(self):
         # 加载模型
         model_location = os.path.join('rotnet_street_view_resnet50_keras2.hdf5')
-        self.model = load_model(model_location, custom_objects={'angle_error': self.angle_error})
+        self.model = load_model(model_location, custom_objects={'angle_error': self.angle_error}, compile=False)
         self.model.compile(loss='categorical_crossentropy',
                            optimizer=SGD(lr=0.01, momentum=0.9),
                            metrics=[self.angle_error])
