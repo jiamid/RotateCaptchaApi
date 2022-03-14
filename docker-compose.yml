@@ -1,0 +1,10 @@
+version: "3"
+services:
+  captcha_api:
+    build: .
+    command: python src/main_api.py
+    restart: on-failure:5
+    ports:
+    - "60002:5555"
+    volumes:
+      - .:/code
