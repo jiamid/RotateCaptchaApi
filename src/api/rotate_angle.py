@@ -18,10 +18,14 @@ class ImageUrlBase(BaseModel):
 
 router = APIRouter()
 
+rotate_captcha_bot = RotateCaptcha()
+
 
 @router.post('/get_angle')
 def get_angle(req: ImageUrlBase):
-    rotate_captcha_bot = RotateCaptcha()
+
     rotate_image = rotate_captcha_bot.getImgFromUrl(req.url)
     predicted_angle = rotate_captcha_bot.predictAngle(rotate_image)
-    return {'angle': predicted_angle}
+    res = {'angle': predicted_angle}
+
+    return res
