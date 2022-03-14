@@ -5,6 +5,6 @@ services:
     command: python src/main_api.py
     restart: on-failure:5
     ports:
-    - "8080:5555"
+    - "8080:8080"
     volumes:
       - .:/code
