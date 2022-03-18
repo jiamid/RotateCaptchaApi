@@ -10,6 +10,7 @@ API_HEADERS = '/rotate_captcha_api'
 app = FastAPI(title='Rotate Captcha Api', openapi_url=f'{API_HEADERS}/openapi.json')
 
 app.add_middleware(
+
     CORSMiddleware,
     allow_origins=['*'],
     allow_credentials=True,
