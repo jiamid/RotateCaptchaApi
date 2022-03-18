@@ -10,6 +10,10 @@ from fastapi import APIRouter
 from pydantic import Field, BaseModel
 from typing import Optional
 from commons.RotateCaptcha import RotateCaptcha
+import os
+import tensorflow as tf
+
+graph = tf.get_default_graph()
 
 
 class ImageUrlBase(BaseModel):
@@ -18,10 +22,14 @@ class ImageUrlBase(BaseModel):
 
 router = APIRouter()
 
+rotate_captcha_bot = RotateCaptcha()
+
 
 @router.post('/get_angle')
 def get_angle(req: ImageUrlBase):
-    rotate_captcha_bot = RotateCaptcha()
+    global graph
     rotate_image = rotate_captcha_bot.getImgFromUrl(req.url)
-    predicted_angle = rotate_captcha_bot.predictAngle(rotate_image)
-    return {'angle': predicted_angle}
+    with graph.as_default():
+        predicted_angle = rotate_captcha_bot.predictAngle(rotate_image)
+    res = {'angle': int(predicted_angle)}
+    return res

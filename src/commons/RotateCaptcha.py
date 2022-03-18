@@ -9,7 +9,7 @@
 from keras.applications.imagenet_utils import preprocess_input
 from keras.models import load_model
 from keras.optimizers import SGD
-import keras.backend as K
+import tensorflow.keras.backend as K
 
 import os
 import math
@@ -21,8 +21,8 @@ import requests
 class RotateCaptcha():
     def __init__(self):
         # 加载模型
-        model_location = os.path.join('..', 'rotnet_street_view_resnet50_keras2.hdf5')
-        self.model = load_model(model_location, custom_objects={'angle_error': self.angle_error})
+        model_location = os.path.join('rotnet_street_view_resnet50_keras2.hdf5')
+        self.model = load_model(model_location, custom_objects={'angle_error': self.angle_error}, compile=False)
         self.model.compile(loss='categorical_crossentropy',
                            optimizer=SGD(lr=0.01, momentum=0.9),
                            metrics=[self.angle_error])
@@ -66,7 +66,7 @@ class RotateCaptcha():
 
         image = cv2.imdecode(np.frombuffer(r.content, np.uint8), cv2.IMREAD_COLOR)  # 直接解码网络数据
 
-        self.showImg(image)
+        # self.showImg(image)
 
         return image
 
@@ -171,9 +171,10 @@ class RotateCaptcha():
 
 if __name__ == '__main__':
     rotateCaptcha = RotateCaptcha()
-    rotated_image = rotateCaptcha.getImgFromDisk('./data/baiduCaptcha/1615096414.jpg')
-    # rotated_image = rotateCaptcha.getImgFromUrl(
-    #     "https://passport.baidu.com/viewlog/img?id=8302-P1JybrNlPeCdQL%2BwemphC5FEp96feqbglhGXqA7BIraRmwF91TmaN0%2B1j355UamTzdbzEEEj4dcglHgg4M%2Bwp3xnvhgJynYB1Uiqxh4BSKn8BqqSTAW3LjksFOtftqcQKufGXAkfTB0QJagJLk%2F2tk7SG2mM4MYz2ee%2BH1WrwtRyhzTnB9B9WD9lMPGf61tAb%2Ft87VjKedJcrOw2CZn%2BLUkzlGEVgJHlmbDHtG67FreiVcMMacVr6p5DDysEBZSJx4N7Jv44iIW0MwNSQuyjSbuua6HuQYEwCrMDYtLT8eiRvcTQCYP%2F1OQdV4jZOmdM&ak=1e3f2dd1c81f2075171a547893391274&tk=4386yYPj9r6TUQFiFt7PI4sA1193QU%2FdlAGDuudQOUlAKhaacJyH2g6FA310KDXrCvQpt4GTPo9i9vPAeGmGJvJgiN5ZcOpwqott1TvEfQMUf%2BE%3D")  # 通过url获取图片
+    # rotated_image = rotateCaptcha.getImgFromDisk('./data/baiduCaptcha/1615096414.jpg')
+    image_url = 'https://passport.baidu.com/viewlog/img?id=5579-6fBUhQdjcFrutWzQrxyz%2BNBbEDINnnXW4P6AE6kqhhgi%2FO6yQipPtRFgITWg%2Fzt6lAu5ViGfg7bB9s6zVFVtnZiJ6BIVPvCnB2kpb%2FVxQU1e6kstxWYxE2bujo%2BiuHyzc3tAxNCJrcGPy5XDib8pX%2FPYknnIVNs0QLwAkemY38%2F3fp%2BR7hoi1zDYNyHG5i49Zaf91oQwmpRqBTDdv1UkB8Bs3TUkPXuvr%2Bs6onAq504UJYMqK%2FG%2FOkddFc2Q6Dp%2B0Zzv5FT%2BqJCTR%2ByI%2BKAQlYEZ99kgexFRs8zGPUe%2FIUb5nW%2FN3VpWBPrjhGvMwAkqf33AJCDVib3Jsk%2FgiLe3rhLZAOpu2IUPQhMhtwduUZ%2B1CISUQ5Q2LmekdZcNaJnY&ak=33c48884b7df83d4230e07cbcd0d07fd&tk=4307cPV5I28bo6O7I%2BKy14Y1waIulUdbztU0OY3d6dtRbfVWm9dUREmQe3VJX1V6E60BXPINkxj3KqFOQM154K%2Bn4R2md3jSHTecLy43Z18W1%2F2Rc4tp7AROro4jAAhYNsCL'
+
+    rotated_image = rotateCaptcha.getImgFromUrl(image_url)
     predicted_angle = rotateCaptcha.predictAngle(rotated_image)  # 预测还原角度
     print("需旋转角度：{}".format(predicted_angle))
 
